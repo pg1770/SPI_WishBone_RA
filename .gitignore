@@ -1,12 +1,4 @@
-iseconfig/WB_SPI_RA.projectmgr
-top_summary.html
-iseconfig/top.xreport
-top_summary.html
-iseconfig/top.xreport
-iseconfig/WB_SPI_RA.projectmgr
-iseconfig/top.xreport
-top_summary.html
-top_summary.html
-iseconfig/top.xreport
-top_summary.html
-iseconfig/top.xreport
+
+*.html
+*.xreport
+*.projectmgr
