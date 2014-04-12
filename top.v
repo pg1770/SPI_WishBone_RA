@@ -16,22 +16,44 @@ module top(
 clk_div DIVi(
   .CLK(CLK_I),
   .RST(RST_I),
-  .CLKOUT(CLKd)
+  .CLKOUT(CLKb)
 );
+
+wire [3:0] CNTROUTa;
+wire [3:0] CNTROUTb;
+wire STOPa;
+
+CNTR CNTRa(
+  .CLK(CLK_I),
+  .RST(RST_I),
+  .STOP(),
+  .OUT(CNTROUTa)
+);
+
+CNTR CNTRb(
+  .CLK(CLKb),
+  .RST(RST_I),
+  .STOP(),
+  .OUT(CNTROUTb)
+);
+
+reg wea=0;
+reg web=0;
 
 v_rams_16 ram_42_x_16(
   .clka(CLK_I),
-  .clkb(clk),
-  .ena(sel11),
+  .clkb(CLKd),
+  .ena(1'b1),
   .enb(1'b1),
-  .wea(1'b1),
-  .web(1'b0),
-  .addra(jaddr),
-  .addrb(address),
-  .dia({jparity, jdata}),
-  .dib(18'h00000),
-  .doa({dopa,doa[15:0]}),
-  .dob(instruction1));
+  .wea(wea),
+  .web(web),
+  .addra(CNTROUTa),
+  .addrb(CNTROUTb),
+  .dia(),
+  .dib(),
+  .doa(),
+  .dob()
+  );
 
 
 
