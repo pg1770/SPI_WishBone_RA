@@ -11,6 +11,9 @@
 <msg type="info" file="ProjectMgmt" num="1845" ><arg fmt="%s" index="1">Analyzing Verilog file &quot;C:/Users/PG/Documents/GitHub/WB_SPI_RA/WB_SPI/WB_SPI_RA/25AA010A.v&quot; into library work</arg>
 </msg>
 
+<msg type="info" file="ProjectMgmt" num="1845" ><arg fmt="%s" index="1">Analyzing Verilog file &quot;C:/Users/PG/Documents/GitHub/WB_SPI_RA/WB_SPI/WB_SPI_RA/sim_top.v&quot; into library work</arg>
+</msg>
+
 <msg type="info" file="ProjectMgmt" num="1845" ><arg fmt="%s" index="1">Analyzing Verilog file &quot;C:/Users/PG/Documents/GitHub/WB_SPI_RA/WB_SPI/WB_SPI_RA/top.v&quot; into library work</arg>
 </msg>
 
