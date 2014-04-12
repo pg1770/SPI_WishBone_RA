@@ -28,6 +28,38 @@ module sim_top;
 		.ACK_O(ACK_O)
 	);
 
+	task bus_read(input [31:30] paddr1); //Busz olvasás taskja
+	begin
+		#2 paddr <= paddr1;
+		pwrite <= 0;
+		pselx <= 1;
+
+		#2 penable <= 1;
+		wait(pready);
+
+		#2 pselx <= 0;
+		penable <=0;
+		#10;
+	end
+	endtask
+
+	task bus_write(input [31:30] paddr1, input [7:0] pwdata1); //Busz írás taskja
+	begin
+
+		#2 paddr <= paddr1;
+		pwrite <= 1;
+		pwdata <= pwdata1;
+		pselx <= 1;
+
+		#2 penable <= 1;
+	wait(pready);
+
+	#2 penable <= 0;
+	pselx <= 0;
+	#2;
+	end
+	endtask
+
 	initial begin
 		// Initialize Inputs
 		ADR_I = 0;
