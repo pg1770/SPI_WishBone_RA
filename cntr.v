@@ -18,8 +18,8 @@ always @(posedge CLK)
 begin
   if (RST) OUT <= 4'b0;
   else if (STOP);
-  else if( OUT == 4'b1111 ) OUT <= 0;
-  else OUT <= OUT + 1;
+    else if( OUT == 4'b1111 ) OUT <= 0;
+      else OUT <= OUT + 1;
 end
 
 endmodule

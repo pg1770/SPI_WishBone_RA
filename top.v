@@ -22,39 +22,72 @@ clk_div DIVi(
 wire [3:0] CNTROUTa;
 wire [3:0] CNTROUTb;
 wire STOPa;
+wire STOPb;
 
 CNTR CNTRa(
   .CLK(CLK_I),
   .RST(RST_I),
-  .STOP(),
+  .STOP(STOPa),
   .OUT(CNTROUTa)
 );
 
 CNTR CNTRb(
   .CLK(CLKb),
   .RST(RST_I),
-  .STOP(),
+  .STOP(STOPb),
   .OUT(CNTROUTb)
 );
 
-reg wea=0;
-reg web=0;
+reg WEa=0;
+reg WEb=0;
+wire dob;
+wire dib;
+wire ackb;
+wire ackbin;
 
 v_rams_16 ram_42_x_16(
   .clka(CLK_I),
   .clkb(CLKd),
-  .ena(1'b1),
-  .enb(1'b1),
-  .wea(wea),
-  .web(web),
+  .ena(!RST_I),
+  .enb(!RST_I),
+  .wea(),
+  .web(1'b1),
   .addra(CNTROUTa),
   .addrb(CNTROUTb),
+  .stopa(STOPa),
+  .stopb(STOPb),
+  .acka(),
+  .ackb(ackb),
+  .ackbin(ackbin),
   .dia(),
-  .dib(),
+  .dib(dib),
   .doa(),
-  .dob()
+  .dob(dob)
   );
 
+wire mosi;
+wire miso;
+
+SPI_MASTER spi_if(
+  .clk(CLKd),
+  .rst(RST_I),
+  .bin(dob),
+  .bout(dib),
+  .backin(ackbin),
+  .backout(ackb),
+  .min(mosi),
+  .mout(miso)
+  );
+
+M25AA010A spi_mem(
+  .SI(mosi),                             // serial data input
+  .SCK(CLKd),                            // serial data clock
+  .CS_N(1'b0),                           // chip select - active low
+  .WP_N(1'b1),                          // write protect pin - active low
+  .HOLD_N(1'b1),                         // interface suspend - active low
+  .RESET(RST_I),                          // model reset/power-on reset
+  .SO(miso)                             // serial data output
+);
 
 
 endmodule
