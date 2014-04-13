@@ -9,8 +9,8 @@ module WB_IF(
   input [31:0] WB_DAT_I,
   input WB_RST_I,
   input WB_STB_I,  
-  output [31:0] WB_DAT_O,
-  output WB_ACK_O,
+  output reg [31:0] WB_DAT_O,
+  output reg WB_ACK_O,
   
   //memory
   output reg BUF_STATUS,
@@ -53,10 +53,11 @@ begin
 
 	if(WB_RST_I)
 	begin
-		BUF_DATA_O <= 0;
+		BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 		state <= 0;
 		BUF_STATUS <= 0;
 		WB_ACK_O <= 0;
+		WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 	end
 
 	else if(clk_fall)
@@ -67,15 +68,15 @@ begin
 			begin
 				if(WB_WE_I)	//iras van
 				begin
-					WB_DAT_O <= {WB_ADR_I, WB_DAT_I, 1};
+					BUF_DATA_O <= {WB_ADR_I[7:0], WB_DAT_I[31:0], 1'b0};
 					BUF_STATUS <= 1;
-					state = state + 1;
+					state <= state + 1;
 				end
 				else //read
 				begin
-					WB_DAT_O <= {WB_ADR_I, 32'd0, 0};
+					BUF_DATA_O <= {WB_ADR_I[7:0], WB_DAT_I[31:0], 1'b1};
 					BUF_STATUS <= 1;
-					state = state + 1;
+					state <= state + 1;
 				end
 			end
 			end
@@ -90,6 +91,7 @@ begin
 				begin
 					if (BUF_ACK)
 					begin
+						WB_ACK_O <= 1;
 						state <= state + 1;
 					end
 				end
@@ -104,10 +106,11 @@ begin
 				end
 			end
 		2: begin
-			BUF_DATA_O <= 0;
+			BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			state <= 0;
 			BUF_STATUS <= 0;
 			WB_ACK_O <= 0;
+			WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			end
 		endcase
 	end
