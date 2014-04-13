@@ -12,6 +12,26 @@ module top(
   output ACK_O
     );
 
+wire acka;
+wire wea;
+wire dia;
+wire doa;
+
+WB_IF wb_if(
+  .WB_ADR_I(ADR_I),
+  .WB_CYC_I(CYC_I),
+  .WB_WE_I(WE_I),
+  .WB_CLK_I(CLK_I),
+  .WB_DAT_I(DAT_I),
+  .WB_RST_I(RST_I),
+  .WB_STB_I(STB_I),
+  .WB_DAT_O(DAT_O),
+  .WB_ACK_O(ACK_O),
+  .BUF_STATUS(wena),
+  .BUF_DATA_O(dia),
+  .BUF_DATA_I(doa),
+  .BUF_ACK(acka)
+  );
 
 clk_div DIVi(
   .CLK(CLK_I),
@@ -50,18 +70,18 @@ v_rams_16 ram_42_x_16(
   .clkb(CLKd),
   .ena(!RST_I),
   .enb(!RST_I),
-  .wea(),
+  .wea(wea),
   .web(1'b1),
   .addra(CNTROUTa),
   .addrb(CNTROUTb),
   .stopa(STOPa),
   .stopb(STOPb),
-  .acka(),
+  .acka(acka),
   .ackb(ackb),
   .ackbin(ackbin),
-  .dia(),
+  .dia(dia),
   .dib(dib),
-  .doa(),
+  .doa(doa),
   .dob(dob)
   );
 

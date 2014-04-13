@@ -39,7 +39,6 @@ reg [41:0] ram [15:0];
 reg [40:0] doa;
 reg [40:0] dob;
 
-reg ackbin;
 reg acka;
 reg stopa;
 reg stopb;
@@ -83,14 +82,14 @@ begin
 			else acka <= 1'b0; // ha nincs ack a wb if otthagyja az adatot a buszon
 		end
 		doa <= ram[addra][40:0]; // ez mindig kintvan, de nem feltetlen valid
-		ackb = 1;
+		acka <= 1;
 	end
 	else // enable negalt
 	begin
 		acka <= 0;
 		stopa <= 0;
 		cica <= 1;
-		ackb <= 0;
+		acka <= 0;
 	end
 end
 
