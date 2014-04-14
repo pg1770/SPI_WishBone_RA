@@ -14,8 +14,8 @@ module top(
 
 wire acka;
 wire wea;
-wire dia;
-wire doa;
+wire [40:0] dia;
+wire [40:0] doa;
 
 WB_IF wb_if(
   .WB_ADR_I(ADR_I),
@@ -60,8 +60,8 @@ CNTR CNTRb(
 
 reg WEa=0;
 reg WEb=0;
-wire dob;
-wire dib;
+wire [40:0] dob;
+wire [40:0] dib;
 wire ackb;
 wire ackbin;
 
