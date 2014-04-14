@@ -1,13 +1,11 @@
-// internal reset logic kill
-
 // *******************************************************************************************************
 // **                                                                                                   **
-// **   25AA010A.v - 25AA010A 1K-BIT SPI SERIAL EEPROM (VCC = +1.8V TO +5.5V)                           **
+// **   25LC010A.v - 25LC010A 1K-BIT SPI SERIAL EEPROM (VCC = +2.5V TO +5.5V)                           **
 // **                                                                                                   **
 // *******************************************************************************************************
 // **                                                                                                   **
 // **                   This information is distributed under license from Young Engineering.           **
-// **                              COPYRIGHT (c) 2009 YOUNG ENGINEERING                                 **
+// **                              COPYRIGHT (c) 2006 YOUNG ENGINEERING                                 **
 // **                                      ALL RIGHTS RESERVED                                          **
 // **                                                                                                   **
 // **                                                                                                   **
@@ -34,11 +32,17 @@
 // **                                                                                                   **
 // *******************************************************************************************************
 // **                                                                                                   **
-// **   Revision       : 1.0                                                                            **
-// **   Modified Date  : 02/04/2009                                                                     **
+// **   Revision       : 1.2                                                                            **
+// **   Modified Date  : 06/05/2006                                                                     **
 // **   Revision History:                                                                               **
 // **                                                                                                   **
-// **   02/04/2009:  Initial design                                                                     **
+// **   02/01/2006:  Initial design                                                                     **
+// **   03/10/2006:  Modified the write logic to update at the end of the write cycle.                  **
+// **   06/05/2006:  Converted instruction value parameters to macro definitions.                       **
+// **                Modified output data shifter to allow for continuous status register reads.        **
+// **                Corrected timing checks to reference proper clock edges.                           **
+// **                Added tCLD & tCLE timing checks.                                                   **
+// **                Changed the legal information in the header                                        **
 // **                                                                                                   **
 // *******************************************************************************************************
 // **                                       TABLE OF CONTENTS                                           **
@@ -79,7 +83,7 @@
 
 `timescale 1ns/10ps
 
-module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
+module M25LC010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
 
    input                SI;                             // serial data input
    input                SCK;                            // serial data clock
@@ -164,13 +168,6 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
 // *******************************************************************************************************
 
    initial begin
-      `ifdef VCC_1_8V_TO_2_5V
-         tWC  = 5000000;                                // memory write cycle time
-         tV   = 160;                                    // output valid from SCK low
-         tHZ  = 160;                                    // HOLD_N low to output high-Z
-         tHV  = 160;                                    // HOLD_N high to output valid
-         tDIS = 160;                                    // CS_N high to output disable
-      `else
       `ifdef VCC_2_5V_TO_4_5V
          tWC  = 5000000;                                // memory write cycle time
          tV   = 100;                                    // output valid from SCK low
@@ -192,7 +189,6 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
          tDIS = 40;                                     // CS_N high to output disable
       `endif
       `endif
-      `endif
    end
 
    initial begin
@@ -211,12 +207,10 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
 //      1.01:  Internal Reset Logic
 // -------------------------------------------------------------------------------------------------------
 
-   // always @(negedge CS_N) begin
-   //     // BitCounter   <= 0;
-   //     SO_Enable    <= 0;
-   //     if (!WriteActive) WritePointer <= 0;
-   //     if (!WriteActive) WriteCounter <= 0;
-   //  end
+   always @(negedge CS_N) BitCounter   <= 0;
+   always @(negedge CS_N) SO_Enable    <= 0;
+   always @(negedge CS_N) if (!WriteActive) WritePointer <= 0;
+   always @(negedge CS_N) if (!WriteActive) WriteCounter <= 0;
 
 // -------------------------------------------------------------------------------------------------------
 //      1.02:  Input Data Shifter
@@ -369,16 +363,14 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
                MemWrAddress = {BaseAddress[6:4],PageAddress[3:0]};
 
                if ({BlockProtect1,BlockProtect0} == 2'b00) begin
-                   if(LoopIndex < 16) begin
-                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
-                   end
+                  MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                end
                if ({BlockProtect1,BlockProtect0} == 2'b01) begin
                   if ((MemWrAddress >= 7'h60) && (MemWrAddress <= 7'h7F)) begin
                      // write protected region
                   end
                   else begin
-                    if(LoopIndex < 16) begin MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex]; end
+                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                   end
                end
                if ({BlockProtect1,BlockProtect0} == 2'b10) begin
@@ -386,7 +378,7 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
                      // write protected region
                   end
                   else begin
-                     if(LoopIndex < 16) begin MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex]; end
+                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                   end
                end
                if ({BlockProtect1,BlockProtect0} == 2'b11) begin
@@ -394,7 +386,7 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
                      // write protected region
                   end
                   else begin
-                     if(LoopIndex < 16) begin MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex]; end
+                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                   end
                end
             end
@@ -517,20 +509,6 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
    wire TimingCheckEnable = (RESET == 0) & (CS_N == 0);
 
    specify
-      `ifdef VCC_1_8V_TO_2_5V
-         specparam
-            tHI  = 150,                                 // Clock high time
-            tLO  = 150,                                 // Clock low time
-            tSU  =  30,                                 // Data setup time
-            tHD  =  50,                                 // Data hold time
-            tHS  =  80,                                 // HOLD_N setup time
-            tHH  =  80,                                 // HOLD_N hold time
-            tCSD =  50,                                 // CS_N disable time
-            tCSS = 150,                                 // CS_N setup time
-            tCSH = 250,                                 // CS_N hold time
-            tCLD = 50,                                  // Clock delay time
-            tCLE = 50;                                  // Clock enable time
-      `else
       `ifdef VCC_2_5V_TO_4_5V
          specparam
             tHI  = 100,                                 // Clock high time
@@ -571,7 +549,6 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
             tCSH = 100,                                 // CS_N hold time
             tCLD = 50,                                  // Clock delay time
             tCLE = 50;                                  // Clock enable time
-      `endif
       `endif
       `endif
 
