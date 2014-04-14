@@ -58,12 +58,12 @@ CNTR CNTRb(
   .OUT(CNTROUTb)
 );
 
-reg WEa=0;
-reg WEb=0;
-wire [40:0] dob;
-wire [40:0] dib;
-wire ackb;
-wire ackbin;
+reg we_BUFF_to_SPI=0;
+reg we_SPI_to_BUFF=0;
+wire [40:0] data_BUFF_to_SPI;
+wire [40:0] data_SPI_to_BUFF;
+wire ack_BUFF_to_SPI;
+wire ack_SPI_to_BUFF;
 
 v_rams_16 ram_42_x_16(
   .clka(CLK_I),
@@ -77,12 +77,12 @@ v_rams_16 ram_42_x_16(
   .stopa(STOPa),
   .stopb(STOPb),
   .acka(acka),
-  .ackb(ackb),
-  .ackbin(ackbin),
+  .ackb(ack_BUFF_to_SPI),
+  .ackbin(ack_SPI_to_BUFF),
   .dia(dia),
-  .dib(dib),
+  .dib(data_SPI_to_BUFF),
   .doa(doa),
-  .dob(dob)
+  .dob(data_BUFF_to_SPI)
   );
 
 wire mosi;
@@ -91,13 +91,15 @@ wire miso;
 SPI_MASTER spi_if(
   .clk(CLKd),
   .rst(RST_I),
-  .bin(dob),
-  .bout(dib),
-  .backin(ackbin),
-  .backout(ackb),
+  .data_out(data_SPI_to_BUFF),
+  .data_in(data_BUFF_to_SPI),
+  .ack_out(ack_SPI_to_BUFF),
+  .ack_in(ack_BUFF_to_SPI),
   .min(mosi),
   .mout(miso)
   );
+
+
 
 M25AA010A spi_mem(
   .SI(mosi),                             // serial data input
