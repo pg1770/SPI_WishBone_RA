@@ -13,9 +13,10 @@ module WB_IF(
   output reg WB_ACK_O,
   
   //memory
-  output reg BUF_STATUS,
-  output reg [40:0] BUF_DATA_O,
-  input [40:0] BUF_DATA_I,
+  output reg BUF_WRn,
+  output reg [31:0] BUF_DATA_O,
+  output reg [7:0] BUF_ADDR_O,
+  input [31:0] BUF_DATA_I,
   input BUF_ACK
   
   );
@@ -53,9 +54,10 @@ begin
 
 	if(WB_RST_I)
 	begin
-		BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+		BUF_DATA_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 		state <= 0;
-		BUF_STATUS <= 0;
+		BUF_WRn <= 0;
+		BUF_ADDR_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 		WB_ACK_O <= 0;
 		WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 	end
@@ -66,19 +68,19 @@ begin
 		0: begin
 			if(WB_CYC_I) //state 0, CYC_I most jelent meg
 			begin
-				if(WB_WE_I)	//iras van
-				begin
-					BUF_DATA_O <= {WB_ADR_I[7:0], WB_DAT_I[31:0], 1'b0};
-					BUF_STATUS <= 1;
-					state <= state + 1;
-				end
-				else //read
-				begin
-					BUF_DATA_O <= {WB_ADR_I[7:0], WB_DAT_I[31:0], 1'b1};
-					BUF_STATUS <= 1;
-					state <= state + 1;
-				end
+				BUF_WRn <= WB_WE_I;
+				BUF_DATA_O <= WB_DAT_I;
+				BUF_ADDR_O <= WB_ADR_I;
+				state <= state + 1;
 			end
+			end
+		1: begin
+			if (BUF_ACK)
+					begin
+						WB_ACK_O <= 1;
+						state <= state + 1;
+						WB_DAT_O <= BUF_DATA_I;
+					end
 			end
 		endcase
 	end
@@ -86,30 +88,10 @@ begin
 	else if(clk_rise)
 	begin
 		case (state)
-		1: begin
-			if(WB_WE_I)	//iras van
-				begin
-					if (BUF_ACK)
-					begin
-						WB_ACK_O <= 1;
-						state <= state + 1;
-					end
-				end
-				else //read
-				begin
-					if(BUF_ACK)
-					begin
-						WB_DAT_O <= BUF_DATA_I[39:8];
-						WB_ACK_O <= 1;
-						state <= state + 1;
-					end
-				end
-			end
 		2: begin
 			BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			state <= 0;
-			BUF_STATUS <= 0;
-			WB_ACK_O <= 0;
+			BUF_WRn <= 0;
 			WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			end
 		endcase
