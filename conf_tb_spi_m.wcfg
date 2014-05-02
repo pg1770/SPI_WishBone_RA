@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/PG/Projects/X/WB_SPI_RA/tb_SPI_MASTER_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_SPI_MASTER" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="18" />
+   <wvobject fp_name="/tb_SPI_MASTER/data_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/ack_out" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ack_out</obj_property>
+      <obj_property name="ObjectShortName">ack_out</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/buf_addrb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">buf_addrb[7:0]</obj_property>
+      <obj_property name="ObjectShortName">buf_addrb[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/web" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">web</obj_property>
+      <obj_property name="ObjectShortName">web</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/mosi" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mosi</obj_property>
+      <obj_property name="ObjectShortName">mosi</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/csn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">csn</obj_property>
+      <obj_property name="ObjectShortName">csn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/data_in" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/miso" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">miso</obj_property>
+      <obj_property name="ObjectShortName">miso</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">state[2:0]</obj_property>
+      <obj_property name="ObjectShortName">state[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/wipreadflag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wipreadflag</obj_property>
+      <obj_property name="ObjectShortName">wipreadflag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/statusreadflag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">statusreadflag</obj_property>
+      <obj_property name="ObjectShortName">statusreadflag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/webflag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">webflag</obj_property>
+      <obj_property name="ObjectShortName">webflag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/shr_mosi" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_mosi[23:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_mosi[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/shr_mosi_cntr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_mosi_cntr[4:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_mosi_cntr[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/shr_miso" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_miso[23:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_miso[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_SPI_MASTER/uut/shr_miso_cntr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_miso_cntr[4:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_miso_cntr[4:0]</obj_property>
+   </wvobject>
+</wave_config>
