@@ -1,5 +1,3 @@
-// internal reset logic kill
-
 // *******************************************************************************************************
 // **                                                                                                   **
 // **   25AA010A.v - 25AA010A 1K-BIT SPI SERIAL EEPROM (VCC = +1.8V TO +5.5V)                           **
@@ -211,12 +209,10 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
 //      1.01:  Internal Reset Logic
 // -------------------------------------------------------------------------------------------------------
 
-   // always @(negedge CS_N) begin
-   //     // BitCounter   <= 0;
-   //     SO_Enable    <= 0;
-   //     if (!WriteActive) WritePointer <= 0;
-   //     if (!WriteActive) WriteCounter <= 0;
-   //  end
+   always @(negedge CS_N) BitCounter   <= 0;
+   always @(negedge CS_N) SO_Enable    <= 0;
+   always @(negedge CS_N) if (!WriteActive) WritePointer <= 0;
+   always @(negedge CS_N) if (!WriteActive) WriteCounter <= 0;
 
 // -------------------------------------------------------------------------------------------------------
 //      1.02:  Input Data Shifter
@@ -369,16 +365,14 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
                MemWrAddress = {BaseAddress[6:4],PageAddress[3:0]};
 
                if ({BlockProtect1,BlockProtect0} == 2'b00) begin
-                   if(LoopIndex < 16) begin
-                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
-                   end
+                  MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                end
                if ({BlockProtect1,BlockProtect0} == 2'b01) begin
                   if ((MemWrAddress >= 7'h60) && (MemWrAddress <= 7'h7F)) begin
                      // write protected region
                   end
                   else begin
-                    if(LoopIndex < 16) begin MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex]; end
+                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                   end
                end
                if ({BlockProtect1,BlockProtect0} == 2'b10) begin
@@ -386,7 +380,7 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
                      // write protected region
                   end
                   else begin
-                     if(LoopIndex < 16) begin MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex]; end
+                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                   end
                end
                if ({BlockProtect1,BlockProtect0} == 2'b11) begin
@@ -394,7 +388,7 @@ module M25AA010A (SI, SO, SCK, CS_N, WP_N, HOLD_N, RESET);
                      // write protected region
                   end
                   else begin
-                     if(LoopIndex < 16) begin MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex]; end
+                     MemoryBlock[MemWrAddress] = WriteBuffer[LoopIndex];
                   end
                end
             end

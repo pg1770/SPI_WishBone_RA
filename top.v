@@ -27,7 +27,7 @@ WB_IF wb_if(
   .WB_STB_I(STB_I),
   .WB_DAT_O(DAT_O),
   .WB_ACK_O(ACK_O),
-  .BUF_STATUS(wena),
+  .BUF_WRn(wena),
   .BUF_DATA_O(dia),
   .BUF_DATA_I(doa),
   .BUF_ACK(acka)
@@ -36,27 +36,9 @@ WB_IF wb_if(
 clk_div DIVi(
   .CLK(CLK_I),
   .RST(RST_I),
-  .CLKOUT(CLKb)
+  .CLKOUT(CLKd)
 );
 
-wire [3:0] CNTROUTa;
-wire [3:0] CNTROUTb;
-wire STOPa;
-wire STOPb;
-
-CNTR CNTRa(
-  .CLK(CLK_I),
-  .RST(RST_I),
-  .STOP(STOPa),
-  .OUT(CNTROUTa)
-);
-
-CNTR CNTRb(
-  .CLK(CLKb),
-  .RST(RST_I),
-  .STOP(STOPb),
-  .OUT(CNTROUTb)
-);
 
 reg we_BUFF_to_SPI=0;
 reg we_SPI_to_BUFF=0;
@@ -64,6 +46,8 @@ wire [40:0] data_BUFF_to_SPI;
 wire [40:0] data_SPI_to_BUFF;
 wire ack_BUFF_to_SPI;
 wire ack_SPI_to_BUFF;
+wire addrb;
+wire web;
 
 v_rams_16 ram_42_x_16(
   .clka(CLK_I),
@@ -71,14 +55,11 @@ v_rams_16 ram_42_x_16(
   .ena(!RST_I),
   .enb(!RST_I),
   .wea(wea),
-  .web(1'b1),
-  .addra(CNTROUTa),
-  .addrb(CNTROUTb),
-  .stopa(STOPa),
-  .stopb(STOPb),
+  .web(web),
+  .addra(ADR_I),
+  .addrb(addrb),
   .acka(acka),
   .ackb(ack_BUFF_to_SPI),
-  .ackbin(ack_SPI_to_BUFF),
   .dia(dia),
   .dib(data_SPI_to_BUFF),
   .doa(doa),
@@ -87,6 +68,7 @@ v_rams_16 ram_42_x_16(
 
 wire mosi;
 wire miso;
+wire csn;
 
 SPI_MASTER spi_if(
   .clk(CLKd),
@@ -94,22 +76,23 @@ SPI_MASTER spi_if(
   .data_out(data_SPI_to_BUFF),
   .data_in(data_BUFF_to_SPI),
   .ack_out(ack_SPI_to_BUFF),
-  .ack_in(ack_BUFF_to_SPI),
-  .min(mosi),
-  .mout(miso)
+  .buf_addrb(addrb),
+  .web(web),
+  .csn(csn),
+  .mosi(mosi),
+  .miso(miso)
   );
 
 
-
-M25AA010A spi_mem(
-  .SI(mosi),                             // serial data input
-  .SCK(CLKd),                            // serial data clock
-  .CS_N(1'b0),                           // chip select - active low
-  .WP_N(1'b1),                          // write protect pin - active low
-  .HOLD_N(1'b1),                         // interface suspend - active low
-  .RESET(RST_I),                          // model reset/power-on reset
-  .SO(miso)                             // serial data output
-);
+// M25AA010A spi_mem(
+//   .SI(mosi),                             // serial data input
+//   .SCK(CLKd),                            // serial data clock
+//   .CS_N(1'b0),                           // chip select - active low
+//   .WP_N(1'b1),                          // write protect pin - active low
+//   .HOLD_N(1'b1),                         // interface suspend - active low
+//   .RESET(RST_I),                          // model reset/power-on reset
+//   .SO(miso)                             // serial data output
+// );
 
 
 endmodule
