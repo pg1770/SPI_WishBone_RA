@@ -82,7 +82,7 @@ v_rams_16 ram_42_x_16(
   .dia(WB_to_BUFF_DATA),
   .dib(SPI_to_BUF_DATA),
   .doa(BUFF_to_WB_DATA),
-  .dob(BUF_to_SPI_DATA),
+  .dob(BUFF_to_SPI_DATA),
   .errora(BUFF_to_WB_ERR)  //ezzel meg kellene vmit kezdeni a Wb nal
   );
 
