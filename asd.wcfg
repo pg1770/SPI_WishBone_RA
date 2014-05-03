@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="C:/Users/PG/Projects/X/WB_SPI_RA/FINAL_TEST_isim_beh1.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="FINAL_TEST" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="61" />
+   <wvobject fp_name="/FINAL_TEST/SPI_MISO" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_MISO</obj_property>
+      <obj_property name="ObjectShortName">SPI_MISO</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/DAT_O" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">DAT_O[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DAT_O[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/ACK_O" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ACK_O</obj_property>
+      <obj_property name="ObjectShortName">ACK_O</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/SPI_MOSI" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_MOSI</obj_property>
+      <obj_property name="ObjectShortName">SPI_MOSI</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/SPI_CLK" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_CLK</obj_property>
+      <obj_property name="ObjectShortName">SPI_CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/SPI_CS_N" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_CS_N</obj_property>
+      <obj_property name="ObjectShortName">SPI_CS_N</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/SPI_WP_N" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_WP_N</obj_property>
+      <obj_property name="ObjectShortName">SPI_WP_N</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/SPI_HOLD_N" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_HOLD_N</obj_property>
+      <obj_property name="ObjectShortName">SPI_HOLD_N</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/SPI_RESET" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SPI_RESET</obj_property>
+      <obj_property name="ObjectShortName">SPI_RESET</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/ADR_I" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ADR_I[7:0]</obj_property>
+      <obj_property name="ObjectShortName">ADR_I[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/CYC_I" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CYC_I</obj_property>
+      <obj_property name="ObjectShortName">CYC_I</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/WE_I" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">WE_I</obj_property>
+      <obj_property name="ObjectShortName">WE_I</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/CLK_I" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CLK_I</obj_property>
+      <obj_property name="ObjectShortName">CLK_I</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/DAT_I" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">DAT_I[31:0]</obj_property>
+      <obj_property name="ObjectShortName">DAT_I[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/RST_I" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RST_I</obj_property>
+      <obj_property name="ObjectShortName">RST_I</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/STB_I" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">STB_I</obj_property>
+      <obj_property name="ObjectShortName">STB_I</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/SI" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SI</obj_property>
+      <obj_property name="ObjectShortName">SI</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/SCK" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SCK</obj_property>
+      <obj_property name="ObjectShortName">SCK</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/WP_N" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">WP_N</obj_property>
+      <obj_property name="ObjectShortName">WP_N</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/CS_N" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">CS_N</obj_property>
+      <obj_property name="ObjectShortName">CS_N</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/HOLD_N" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">HOLD_N</obj_property>
+      <obj_property name="ObjectShortName">HOLD_N</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/RESET" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">RESET</obj_property>
+      <obj_property name="ObjectShortName">RESET</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/mem/SO" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">SO</obj_property>
+      <obj_property name="ObjectShortName">SO</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffa500</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/clka" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clka</obj_property>
+      <obj_property name="ObjectShortName">clka</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/clkb" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clkb</obj_property>
+      <obj_property name="ObjectShortName">clkb</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/ena" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ena</obj_property>
+      <obj_property name="ObjectShortName">ena</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/enb" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enb</obj_property>
+      <obj_property name="ObjectShortName">enb</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/wea" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wea</obj_property>
+      <obj_property name="ObjectShortName">wea</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/web" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">web</obj_property>
+      <obj_property name="ObjectShortName">web</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/addra" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addra[7:0]</obj_property>
+      <obj_property name="ObjectShortName">addra[7:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/addrb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">addrb[7:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb[7:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/dia" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dia[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dia[31:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/dib" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dib[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dib[31:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/doa" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">doa[31:0]</obj_property>
+      <obj_property name="ObjectShortName">doa[31:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/dob" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dob[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dob[31:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/acka" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">acka</obj_property>
+      <obj_property name="ObjectShortName">acka</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/ackb" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ackb</obj_property>
+      <obj_property name="ObjectShortName">ackb</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/ram_42_x_16/errora" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">errora</obj_property>
+      <obj_property name="ObjectShortName">errora</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ffff00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/data_in" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_in[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/data_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/mosi" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">mosi</obj_property>
+      <obj_property name="ObjectShortName">mosi</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/miso" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">miso</obj_property>
+      <obj_property name="ObjectShortName">miso</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/csn" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">csn</obj_property>
+      <obj_property name="ObjectShortName">csn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/buf_addrb" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">buf_addrb[7:0]</obj_property>
+      <obj_property name="ObjectShortName">buf_addrb[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/web" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">web</obj_property>
+      <obj_property name="ObjectShortName">web</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/shr_mosi" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_mosi[23:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_mosi[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/shr_mosi_cntr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_mosi_cntr[4:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_mosi_cntr[4:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/shr_miso" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_miso[23:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_miso[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/shr_miso_cntr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_miso_cntr[4:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_miso_cntr[4:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/state" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">state[1:0]</obj_property>
+      <obj_property name="ObjectShortName">state[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/spimem_wip" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">spimem_wip</obj_property>
+      <obj_property name="ObjectShortName">spimem_wip</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/wipreadflag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">wipreadflag</obj_property>
+      <obj_property name="ObjectShortName">wipreadflag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/statusreadflag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">statusreadflag</obj_property>
+      <obj_property name="ObjectShortName">statusreadflag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/webflag" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">webflag</obj_property>
+      <obj_property name="ObjectShortName">webflag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/shr_wren" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">shr_wren[7:0]</obj_property>
+      <obj_property name="ObjectShortName">shr_wren[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/wren_cntr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wren_cntr[3:0]</obj_property>
+      <obj_property name="ObjectShortName">wren_cntr[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/clk_rise" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_rise</obj_property>
+      <obj_property name="ObjectShortName">clk_rise</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/clk_fall" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk_fall</obj_property>
+      <obj_property name="ObjectShortName">clk_fall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/FINAL_TEST/uut/spi_if/ack_out" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ack_out</obj_property>
+      <obj_property name="ObjectShortName">ack_out</obj_property>
+   </wvobject>
+</wave_config>

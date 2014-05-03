@@ -1,26 +1,4 @@
-`timescale 1ns / 1ps
-
-////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
-//
-// Create Date:   23:22:20 05/03/2014
-// Design Name:   top
-// Module Name:   E:/WB_SPI_hazi_git/hazi_local_project/FINAL_TEST.v
-// Project Name:  WB_SPI_RA
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: top
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-////////////////////////////////////////////////////////////////////////////////
+﻿`timescale 1ns / 1ps
 
 module FINAL_TEST;
 
