@@ -235,6 +235,7 @@ wire shift = 23'b00000011;
 
 		#2
 		wait(ACK_O);
+		#2
 
 		
 		//ADR határozatlan
@@ -256,12 +257,14 @@ wire shift = 23'b00000011;
 		CYC_I <= 1;
 
 		#2 wait(ACK_O);
+		#2
 
 		STB_I <= 0;
 		CYC_I <= 0;
+		WE_I <= 0;
 		//ADR határozatlan
 		//DAT határozatlan
-
+		
 	end
 	endtask
 
@@ -284,7 +287,7 @@ wire shift = 23'b00000011;
 		RST_I = 0;
 		#11
 		// Add stimulus here
-		/*
+		
 		#10
 		mem_write_enable();
 		#10
@@ -292,7 +295,7 @@ wire shift = 23'b00000011;
 		# 50
 
 		mem_status_read ();
-		*/
+		
 		
 		//bus_read(1);
 		bus_write(1,32'hABCD);

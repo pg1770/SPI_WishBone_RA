@@ -79,9 +79,7 @@ begin
 		1: begin
 			if (BUF_ACK)
 					begin
-						WB_ACK_O <= 1;
 						state <= state + 1;
-						WB_DAT_O <= BUF_DATA_I;
 					end
 			end
 		endcase
@@ -91,11 +89,20 @@ begin
 	begin
 		case (state)
 		2: begin
+				WB_ACK_O <= 1;
+				state <= state + 1;
+				if(!WB_WE_I)
+				begin
+					WB_DAT_O <= BUF_DATA_I;
+				end
+		end	
+		3: begin
 			BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			state <= 0;
 			BUF_WR <= 0;
 			WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			BUF_ADDR_O <= 7'bxxxxxxx;
+			WB_ACK_O <= 0;
 			end
 		endcase
 	end
