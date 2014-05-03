@@ -9,13 +9,38 @@ module top(
   input RST_I,
   input STB_I,  // de facto Slave Select
   output [31:0] DAT_O,
-  output ACK_O
-    );
+  output ACK_O,
+  
+  output SPI_MOSI,                             // serial data input
+  output SPI_CLK,                            // serial data clock
+  output SPI_CS_N,                           // chip select - active low
+  output SPI_WP_N,                          // write protect pin - active low
+  output SPI_HOLD_N,                         // interface suspend - active low
+  output SPI_RESET,                          // model reset/power-on reset
+  input  SPI_MISO                             // serial data output
+  );
 
-wire acka;
-wire wea;
-wire [40:0] dia;
-wire [40:0] doa;
+
+
+assign SPI_HOLD_N = 1;
+assign SPI_WP_N = 1;
+
+assign SPI_RESET = RST_I;
+
+wire WB_to_BUFF_WE;
+wire [40:0] WB_to_BUFF_ADR;
+wire [31:0] WB_to_BUFF_DATA;
+wire [31:0] BUFF_to_WB_DATA;
+wire BUFF_to_WB_ACK;
+wire BUFF_to_WB_ERR;
+
+wire [31:0] SPI_to_BUFF_DATA;
+wire [31:0] BUFF_to_SPI_DATA;
+wire SPI_to_BUFF_ACK;
+wire [7:0] SPI_to_BUFF_ADR;
+wire SPI_to_BUFF_WE;
+
+wire CLKd;
 
 WB_IF wb_if(
   .WB_ADR_I(ADR_I),
@@ -27,11 +52,14 @@ WB_IF wb_if(
   .WB_STB_I(STB_I),
   .WB_DAT_O(DAT_O),
   .WB_ACK_O(ACK_O),
-  .BUF_WR(wea),
-  .BUF_DATA_O(dia),
-  .BUF_DATA_I(doa),
-  .BUF_ACK(acka)
+  .BUF_WR(WB_to_BUFF_WE),
+  .BUF_ADDR_O(WB_to_BUFF_ADR),
+  .BUF_DATA_O(WB_to_BUFF_DATA),
+  .BUF_DATA_I(BUFF_to_WB_DATA),
+  .BUF_ACK(BUFF_to_WB_ACK)
   );
+
+
 
 clk_div DIVi(
   .CLK(CLK_I),
@@ -40,59 +68,37 @@ clk_div DIVi(
 );
 
 
-reg we_BUFF_to_SPI=0;
-reg we_SPI_to_BUFF=0;
-wire [40:0] data_BUFF_to_SPI;
-wire [40:0] data_SPI_to_BUFF;
-wire ack_BUFF_to_SPI;
-wire ack_SPI_to_BUFF;
-wire addrb;
-wire web;
-
 v_rams_16 ram_42_x_16(
   .clka(CLK_I),
   .clkb(CLKd),
   .ena(!RST_I),
   .enb(!RST_I),
-  .wea(wea),
+  .wea(WB_to_BUFF_WE),
   .web(web),
-  .addra(ADR_I),
+  .addra(WB_to_BUFF_ADR),
   .addrb(addrb),
-  .acka(acka),
-  .ackb(ack_BUFF_to_SPI),
-  .dia(dia),
-  .dib(data_SPI_to_BUFF),
-  .doa(doa),
-  .dob(data_BUFF_to_SPI)
+  .acka(BUFF_to_WB_ACK),
+  .ackb(SPI_to_BUFF_ACK),
+  .dia(WB_to_BUFF_DATA),
+  .dib(SPI_to_BUF_DATA),
+  .doa(BUFF_to_WB_DATA),
+  .dob(BUF_to_SPI_DATA),
+  .errora(BUFF_to_WB_ERR)  //ezzel meg kellene vmit kezdeni a Wb nal
   );
 
-wire mosi;
-wire miso;
-wire csn;
+
 
 SPI_MASTER spi_if(
-  .clk(CLKd),
-  .rst(RST_I),
-  .data_out(data_SPI_to_BUFF),
-  .data_in(data_BUFF_to_SPI),
-  .ack_out(ack_SPI_to_BUFF),
-  .buf_addrb(addrb),
-  .web(web),
-  .csn(csn),
-  .mosi(mosi),
-  .miso(miso)
-  );
-
-
-// M25AA010A spi_mem(
-//   .SI(mosi),                             // serial data input
-//   .SCK(CLKd),                            // serial data clock
-//   .CS_N(1'b0),                           // chip select - active low
-//   .WP_N(1'b1),                          // write protect pin - active low
-//   .HOLD_N(1'b1),                         // interface suspend - active low
-//   .RESET(RST_I),                          // model reset/power-on reset
-//   .SO(miso)                             // serial data output
-// );
-
+	.clk(CLKd),
+	.rst(RST_I),
+	.data_out(SPI_to_BUFF_DATA),
+	.data_in(BUFF_to_SPI_DATA),
+	.ack_out(SPI_to_BUFF_ACK),
+	.buf_addrb(SPI_to_BUFF_ADR),
+	.web(SPI_to_BUFF_WE),
+	.mosi(SPI_MOSI),
+	.csn(SPI_CS_N),
+	.miso(SPI_MISO)
+);
 
 endmodule

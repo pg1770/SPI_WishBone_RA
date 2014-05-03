@@ -13,7 +13,7 @@ output           CLKOUT;
 reg CLKOUT;
 
 reg [24:0]       clkCount =  25'h0000000;
-parameter [24:0] cntEndVal = 25'h0027100;
+parameter [24:0] cntEndVal = 25'h0000002;
 
 
 always @(posedge CLK or posedge RST)
