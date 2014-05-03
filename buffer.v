@@ -38,43 +38,75 @@ reg [31:0] dob;
 reg acka;
 reg ackb;
 
+integer i;
 // WB Message: address[6:0], data[7:0], dcares, R/nW, foglalt, ready
-reg acka_cntr=1;
+reg acka_cntr;
+
+initial begin
+	for( i = 0; i < 256; i = i + 1 )
+	begin
+		ram[i] <= 32'd0;
+	end
+end
+
 
 always @(posedge clka)
 begin
+
 	if (ena)
 	begin
+		//ack 1 orajelig kell h tartson, ha a counterje fel van húzva, akkor ebben a lepesben
+		// kell lehuznunk az ack ot
+		if (acka_cntr == 1)
+		begin
+			acka <= 1'b0;
+			acka_cntr <= 0;
+			errora <= 1'b0;
+		end
+	
+		// WB irna a bufferbe
 		if (wea)
 		begin
+			// ha meg nem foglalt a hely akkor beirjuk
 			if(ram[addra][30] != 1'b1)
 			begin
 				ram[addra][29:0] <= dia[29:0];
 				acka <= 1'b1;
-				acka_cntr <= 0;
-				ram[addra][31] <= 0;	//ready
-				ram[addra][30] <= 1;	//foglalt
+				acka_cntr <= 1;
+				ram[addra][31] <= 1'b0;	//ready
+				ram[addra][30] <= 1'b1;	//foglalt
 			end
+			// ha foglalt a hely
+			// waiteljunk addig vagy adjunk bus errort? (busz error sztem nem erre van bar ki tudja)
 			else
 			begin
 				errora <= 1'b1;
-				if (acka_cntr == 0)
-				begin
-					acka <= 1'b0;
-					acka_cntr <= 1;
-				end
-				else
-				begin
-					acka_cntr <= 1;
-				end
+				acka <= 1'b1;
+				acka_cntr <= 1;
 			end
-		end //wea
+		end //end WB write
+		// WB readel
 		else
 		begin
 			acka <= 1'b1;
-		end
+			//ha mar ready volt az uzenet, akkor ki is torolhetjuk a foglaltsagot
+			// mivel mar atadtuk a Wbnak a kesz adatot
+			if(ram[addra][31] == 1'b1)
+			begin
+				ram[addra][30] <= 1'b0;
+			end
+		end //end WB read
 		doa <= ram[addra];		// majd kiolvasonak nezni kell h ready-e
+		
 	end
+	
+	else
+	begin
+		acka_cntr <= 0;
+		acka <= 1'b0;
+		errora <= 1'b0;
+	end
+
 end
 
 always @(posedge clkb)
@@ -94,186 +126,3 @@ end
 
 endmodule
 
-// module v_rams_16 (
-// 	clka,
-// 	clkb,
-// 	ena,
-// 	enb,
-// 	wea,
-// 	web,
-// 	addra,
-// 	addrb,
-// 	stopa,
-// 	stopb,
-// 	ackbin,
-// 	acka,
-// 	ackb, //mem2spi_data_valid
-// 	dia,
-// 	dib,
-// 	doa,
-// 	dob);
-
-// input clka;
-// input clkb;
-// input ena;
-// input enb;
-// input wea;
-// input web;
-// input ackbin;
-// input [4:0] addra;
-// input [4:0] addrb;
-// input [40:0] dia;
-// input [40:0] dib;
-// output [40:0] doa;
-// output [40:0] dob;
-// output acka;
-// output stopa;
-// output stopb;
-// output ackb; //mem2spi_data_valid
-// reg [41:0] ram [15:0];
-// reg [40:0] doa;
-// reg [40:0] dob;
-
-// reg acka;
-// reg stopa;
-// reg stopb;
-// reg cica;
-// reg cica2;
-// reg ackb;
-
-// // cica problema
-
-// always @(posedge clka)
-// begin
-// 	if (ena)
-// 	begin
-// 		if (wea)		// elo kell allitani ertelmesen
-// 		begin
-// 			if(!ram[addra][41])
-// 			begin
-// 				ram[addra][40:0] <= dia;
-// 				// read vagy write
-// 				ram[addra][41] <= 1'b1; // foglalt
-// 				if(!dia[40])	// ha write van, 40-es bit: write a 0
-// 				begin
-// 					acka <= 1'b1;
-// 				end
-// 				else // read van
-// 				begin
-// 					// elso kor stopa 0-ba, masodik kortol, ha 41. bit 0, akkor ack es stopa <= 1
-// 					if(cica > 0)
-// 					begin
-// 						stopa <= 1;
-// 						cica <= cica - 1;
-// 					end
-// 					if( ram[addra][41] == 1'b0 )
-// 					begin
-// 						stopa <= 0;
-// 						acka <= 1;
-// 						cica <= 1'b1;
-// 					end
-// 				end
-// 			end
-// 			else acka <= 1'b0; // ha nincs ack a wb if otthagyja az adatot a buszon
-// 		end
-// 		doa <= ram[addra][40:0]; // ez mindig kintvan, de nem feltetlen valid
-// 		acka <= 1;
-// 	end
-// 	else // enable negalt
-// 	begin
-// 		acka <= 0;
-// 		stopa <= 0;
-// 		cica <= 1;
-// 		acka <= 0;
-// 	end
-// end
-
-
-
-// always @(posedge clkb)
-// begin
-// 	if(enb)
-// 	begin
-// 		if(ram[addrb][41] == 1'b0) // nem foglalt, nincs mit elvenni
-// 			stopb <= 1;
-// 		else  // foglalt, van ervenyes adat, amit elvehet az spi
-// 		begin
-// 			if(ram[addrb][40] == 1'b0) // write
-// 			begin
-// 			 if(cica2 == 0)
-// 			 begin
-// 				dob <= ram[addrb][40:0];
-// 				ackb <= 1;
-// 				cica2 <= 1;
-// 			 end
-// 			 else
-// 			 begin
-// 			  ackb <= 0;
-// 			  cica2 <= 0;
-// 			  stopb <= 0;
-// 			 end
-// 			end
-// 			else // read
-// 			begin
-// 				if(ackbin == 0) // ha spi meg nem valaszolt, h kesz
-// 				begin
-// 					dob <= ram[addrb][40:0];
-// 					ackb <= 1;
-// 					stopb <= 1;
-// 				end
-// 				else // spi kesz
-// 				begin
-// 					ram[addrb][40:0] <= dib; // spi akkor az egeszet visszaadja
-// 					ram[addrb][41] <= 1'b0;
-// 					stopb <= 0;
-// 					ackb <= 0;
-// 				end
-// 			end
-// 		end
-// 	end
-// 	else // enb negalt
-// 	begin
-// 		cica2 <= 0;
-// 		ackb <= 0;
-// 		stopb <= 0;
-// 	end
-// end
-
-// endmodule
-
-	// if (enb)
-	// begin
-	// 	if (!web)	// TODO: elo kellene allitani ertelmesen
-	// 	begin
-	// 		if(ram[addrb][41] == 1'b1)
-	// 		begin
-	// 			dob <= ram[addrb];
-	// 			if(cica2 > 0)
-	// 			begin
-	// 				ackb <= 1;
-	// 				cica2 <= cica2 - 1;
-	// 			end
-	// 			if(ram[addrb][40] == 0) // write van
-	// 			begin
-	// 				ram[addrb][41] == 1'b0;
-	// 				stopb <= 0;
-
-	// 			end
-	// 			else // read van, stop-t majd allitani kell, majd a memory write-nal fogjuk
-	// 			begin
-	// 			end
-	// 		end
-	// 		else
-	// 		begin
-	// 			stopb <= 1; // ezt meg majd 0-ba kell huzni
-	// 		end
-	// 	end
-	// 	dob <= ram[addrb];
-	// end
-	// else // tehat most a memoriat irjuk az spi tudja ezt, o kezdemenyezte a read ciklust
-	// begin
-	// 	ram[addrb][8:40] <= dib[8:40];
-	// 	ram[addrb][41] <= 1'b0;
-	// 	stopb <= 0;
-	// 	ackb <= 0; // ackb-n a valid data-t ertjuk
-	// end

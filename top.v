@@ -27,7 +27,7 @@ WB_IF wb_if(
   .WB_STB_I(STB_I),
   .WB_DAT_O(DAT_O),
   .WB_ACK_O(ACK_O),
-  .BUF_WRn(wena),
+  .BUF_WR(wea),
   .BUF_DATA_O(dia),
   .BUF_DATA_I(doa),
   .BUF_ACK(acka)

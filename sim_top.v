@@ -236,18 +236,20 @@ wire shift = 23'b00000011;
 		#2
 		wait(ACK_O);
 
-		#2
+		
 		//ADR határozatlan
 		//DAT határozatlan
 		STB_I <= 0;
 		CYC_I <= 0;
 	end
 	endtask
-
+	
+	//felfutoelre hivjuk
 	task bus_write(input [7:0] addr_w, input [31:0] data_w); //Busz írás taskja
 	begin
 
-		#2 ADR_I <= addr_w;
+		#2 
+		ADR_I <= addr_w;
 		WE_I <= 1;
 		DAT_I <= data_w;
 		STB_I <= 1;
@@ -255,7 +257,7 @@ wire shift = 23'b00000011;
 
 		#2 wait(ACK_O);
 
-		#2 STB_I <= 0;
+		STB_I <= 0;
 		CYC_I <= 0;
 		//ADR határozatlan
 		//DAT határozatlan
@@ -280,8 +282,9 @@ wire shift = 23'b00000011;
 		RST_I = 1;
 		#20
 		RST_I = 0;
-		#5
+		#11
 		// Add stimulus here
+		/*
 		#10
 		mem_write_enable();
 		#10
@@ -289,14 +292,14 @@ wire shift = 23'b00000011;
 		# 50
 
 		mem_status_read ();
+		*/
 		
-		/*
-		bus_read(1);
+		//bus_read(1);
 		bus_write(1,32'hABCD);
 		bus_read(1);
-		bus_write(1,32'hFEDC);
+		bus_write(255,32'hFEDC);
 		bus_read(1);
-		*/
+		
 	end
 
 	always #1 CLK_I = ~CLK_I;

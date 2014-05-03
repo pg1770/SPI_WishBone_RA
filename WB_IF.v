@@ -13,7 +13,7 @@ module WB_IF(
   output reg WB_ACK_O,
   
   //memory
-  output reg BUF_WRn,
+  output reg BUF_WR,
   output reg [31:0] BUF_DATA_O,
   output reg [7:0] BUF_ADDR_O,
   input [31:0] BUF_DATA_I,
@@ -56,8 +56,8 @@ begin
 	begin
 		BUF_DATA_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 		state <= 0;
-		BUF_WRn <= 0;
-		BUF_ADDR_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+		BUF_WR <= 0;
+		BUF_ADDR_O <= 7'bxxxxxxx;
 		WB_ACK_O <= 0;
 		WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 	end
@@ -66,14 +66,16 @@ begin
 	begin
 		case (state)
 		0: begin
+			WB_ACK_O <= 0;
 			if(WB_CYC_I) //state 0, CYC_I most jelent meg
 			begin
-				BUF_WRn <= WB_WE_I;
+				BUF_WR <= WB_WE_I;
 				BUF_DATA_O <= WB_DAT_I;
 				BUF_ADDR_O <= WB_ADR_I;
 				state <= state + 1;
 			end
 			end
+		// varjuk a buffer ack jat
 		1: begin
 			if (BUF_ACK)
 					begin
@@ -91,8 +93,9 @@ begin
 		2: begin
 			BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			state <= 0;
-			BUF_WRn <= 0;
+			BUF_WR <= 0;
 			WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+			BUF_ADDR_O <= 7'bxxxxxxx;
 			end
 		endcase
 	end
