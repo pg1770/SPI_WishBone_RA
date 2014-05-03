@@ -261,6 +261,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
             shr_wren <= {1'b0,shr_wren[7:1]};
             wren_cntr <= wren_cntr - 1;
           end
+          else csn <= 1'b1;
         end
         2'b01:  // buffer adatok kishiftelese az spi memoriara
         begin
@@ -269,9 +270,6 @@ always @(posedge clk or posedge rst or negedge clk) begin
             if(csn == 1'b1)
             begin
               csn <= 1'b0;
-            end
-            else begin
-              csn <= 1'b1;        // wren beiras utani csn beallitas
             end
             mosi <= shr_mosi[0];
             shr_mosi <= {1'b0,shr_mosi[22:1]};
