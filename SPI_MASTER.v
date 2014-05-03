@@ -176,7 +176,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
             else if(shr_miso_cntr != 0)
             begin
               shr_miso[shr_miso_cntr-1] <= miso;
-              shr_mosi_cntr <= shr_mosi_cntr - 1;
+              shr_miso_cntr <= shr_miso_cntr - 1;
             end
 
             else    // ha mar beirtuk a status regiszter tartalmat az shr_miso regiszterbe
@@ -253,8 +253,8 @@ always @(posedge clk or posedge rst or negedge clk) begin
               csn <= 1'b0;
             end
             mosi <= shr_wren[0];
-            shr_wren <= {1'b0,shr_mosi[7:1]};
-            shr_mosi_cntr <= shr_mosi_cntr - 1;
+            shr_wren <= {1'b0,shr_wren[7:1]};
+            wren_cntr <= wren_cntr - 1;
           end
         end
         2'b01:  // buffer adatok kishiftelese az spi memoriara
