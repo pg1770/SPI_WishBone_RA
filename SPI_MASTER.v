@@ -46,6 +46,8 @@ reg spimem_wip;
 reg wipreadflag=1;
 reg statusreadflag=1;
 reg webflag=1;
+reg [3:0] wren_cntr=8;
+reg [7:0] shr_wren=8'b01100000;
 
 reg [31:0] data_in_temp;
 
@@ -61,7 +63,6 @@ begin
     clk_rise_r <= 0;
   else
     clk_rise_r <= ~clk_rise_r;
-
 end
 
 always@(negedge clk)
@@ -78,11 +79,13 @@ always @(posedge clk or posedge rst or negedge clk) begin
     buf_addrb <= 0;
     shr_mosi_cntr <= 0;
     shr_miso_cntr <= 0;
+    wren_cntr <= 8;
     wipreadflag <= 1;
     statusreadflag <= 1;
     webflag <= 1;
     web <= 0;
     csn <= 1;
+    shr_wren <= 8'b01100000;
   end
 
   else if (clk_rise)
@@ -91,19 +94,23 @@ always @(posedge clk or posedge rst or negedge clk) begin
       case(state)
         2'b00:    // adatok bufferbol
         begin
-          if(data_in[29] == 1'b1)         // read kell
+          if( wren_cntr == 0)    // barmi elott beallitjuk a write enable regisztert a memoriaban
           begin
-            // shr_mosi <= {8'b00000011,1'b0,data_in[6:0],8'b00000000}; // regiszter veget feltoltjuk 0-kal, mert miertne
-            shr_mosi <= {8'b00000000,data_in[6:0],1'b0,8'b11000000};
-            shr_mosi_cntr <= 16;
-            state <= 2'b01;
-          end
-          else                            // write kell
-          begin
-            // shr_mosi <= {8'b00000010,1'b0,data_in[6:0],data_in[14:7]};
-            shr_mosi <= {data_in[14:7],data_in[6:0],1'b0,8'b01000000};
-            shr_mosi_cntr <= 24;    // itt majd figyelni kell...
-            state <= 2'b01;
+            csn <= 1'b1;        // wren beiras utani csn beallitas
+            if(data_in[29] == 1'b1)         // read kell
+            begin
+              // shr_mosi <= {8'b00000011,1'b0,data_in[6:0],8'b00000000}; // regiszter veget feltoltjuk 0-kal, mert miertne
+              shr_mosi <= {8'b00000000,data_in[6:0],1'b0,8'b11000000};
+              shr_mosi_cntr <= 16;
+              state <= 2'b01;
+            end
+            else                            // write kell
+            begin
+              // shr_mosi <= {8'b00000010,1'b0,data_in[6:0],data_in[14:7]};
+              shr_mosi <= {data_in[14:7],data_in[6:0],1'b0,8'b01000000};
+              shr_mosi_cntr <= 24;    // itt majd figyelni kell...
+              state <= 2'b01;
+            end
           end
         end
         2'b01:  // buffer adatok kishiftelese az spi memoriara
@@ -188,6 +195,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
                 data_out[31] <= 1'b1; // az egesz iras ciklus ready
                 wipreadflag <= 1;
                 statusreadflag <= 1;
+                web <= 0;
                 webflag <= 1; // remelem ez igy ok
                 state <= 2'b00;
                 end
@@ -236,7 +244,19 @@ always @(posedge clk or posedge rst or negedge clk) begin
   begin
     if (data_in[30] == 1'b1 && data_in[31] != 1'b1) begin
       case(state)
-        2'b00: begin end
+        2'b00:
+        begin
+          if( wren_cntr != 0)
+          begin
+            if(csn == 1'b1)
+            begin
+              csn <= 1'b0;
+            end
+            mosi <= shr_wren[0];
+            shr_wren <= {1'b0,shr_mosi[7:1]};
+            shr_mosi_cntr <= shr_mosi_cntr - 1;
+          end
+        end
         2'b01:  // buffer adatok kishiftelese az spi memoriara
         begin
           if(shr_mosi_cntr != 5'b0)
@@ -286,7 +306,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
         end
 
-        2'b11: begin end
+        2'b11: begin if(shr_miso_cntr == 0 && webflag == 0) csn <= 1; end // webflag lehuzasat mar latja a negedge elvileg
       endcase
     end
   end
