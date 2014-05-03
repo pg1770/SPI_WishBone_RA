@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 100ns / 1000ps
 
 
 module tb_SPI_MASTER;
@@ -7,7 +7,7 @@ module tb_SPI_MASTER;
 	reg clk;
 	reg rst;
 	reg [31:0] data_in;
-	reg miso;
+	wire miso;
 
 	// Outputs
 	wire [31:0] data_out;
@@ -16,6 +16,16 @@ module tb_SPI_MASTER;
 	wire web;
 	wire mosi;
 	wire csn;
+
+	M25AA010A mem(
+	.SI(mosi),
+	.SCK(clk),
+	.CS_N(csn),
+	.WP_N(1),
+	.HOLD_N(1),
+	.RESET(rst),
+	.SO(miso)
+	);
 
 	// Instantiate the Unit Under Test (UUT)
 	SPI_MASTER uut (
@@ -52,14 +62,16 @@ module tb_SPI_MASTER;
 		clk = 0;
 		rst = 0;
 		data_in = 0;
-		miso = 0;
+		//miso = 0;
 
 		// Wait 100 ns for global reset to finish
 		#100;
-
+		rst = 1;
+		#4
+		rst = 0;
 		// Add stimulus here
 		#2
-		data_in <= 32'b01000001010101001010101010100010;
+		data_in <= 32'b01000001010101001110000000000000;
 
 		#2
 		wait(mosi);
