@@ -213,7 +213,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
         begin
           if(shr_miso_cntr != 0) // if(shr_mosi_cntr != 0)
           begin
-            shr_miso[shr_miso_cntr-1] <= miso;
+            shr_miso[ 7 - (shr_miso_cntr-1) ] <= miso;
             shr_miso_cntr <= shr_miso_cntr -1;
           end
           else // shr_misoba mar ki van olvasva az spi read valasz
