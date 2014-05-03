@@ -182,7 +182,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
             else    // ha mar beirtuk a status regiszter tartalmat az shr_miso regiszterbe
             begin
               // csn <= 1'b1;
-              if(shr_miso[7] == 1'b0) // tehat ha az iras befejezodott
+              if(shr_miso[0] == 1'b0) // tehat ha az iras befejezodott
               begin
                 if(webflag == 1)
                 begin
@@ -200,6 +200,11 @@ always @(posedge clk or posedge rst or negedge clk) begin
                 state <= 2'b00;
                 end
               end
+              else
+              begin
+                 statusreadflag <= 1;
+                 wipreadflag <= 1;
+               end
             end
           end
         end
