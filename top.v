@@ -41,6 +41,7 @@ wire [7:0] SPI_to_BUFF_ADR;
 wire SPI_to_BUFF_WE;
 
 wire CLKd;
+assign SPI_CLK = CLKd;
 
 WB_IF wb_if(
   .WB_ADR_I(ADR_I),
