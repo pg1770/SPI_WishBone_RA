@@ -96,7 +96,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
         begin
           if( wren_cntr == 0)    // barmi elott beallitjuk a write enable regisztert a memoriaban
           begin
-            csn <= 1'b1;        // wren beiras utani csn beallitas
+            // csn <= 1'b1;        // wren beiras utani csn beallitas
             if(data_in[29] == 1'b1)         // read kell
             begin
               // shr_mosi <= {8'b00000011,1'b0,data_in[6:0],8'b00000000}; // regiszter veget feltoltjuk 0-kal, mert miertne
@@ -269,6 +269,9 @@ always @(posedge clk or posedge rst or negedge clk) begin
             if(csn == 1'b1)
             begin
               csn <= 1'b0;
+            end
+            else begin
+              csn <= 1'b1;        // wren beiras utani csn beallitas
             end
             mosi <= shr_mosi[0];
             shr_mosi <= {1'b0,shr_mosi[22:1]};
