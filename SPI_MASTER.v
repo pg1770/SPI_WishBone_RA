@@ -198,7 +198,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
 
         2'b11:
         begin
-          if(shr_mosi_cntr != 0)
+          if(shr_miso_cntr != 0) // if(shr_mosi_cntr != 0)
           begin
             shr_miso[shr_miso_cntr-1] <= miso;
             shr_miso_cntr <= shr_miso_cntr -1;
