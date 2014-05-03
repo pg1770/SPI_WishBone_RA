@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 100ns / 1000ps
 
 module FINAL_TEST;
 

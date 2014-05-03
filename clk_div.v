@@ -13,9 +13,21 @@ output           CLKOUT;
 reg CLKOUT;
 
 reg [24:0]       clkCount =  25'h0000000;
-parameter [24:0] cntEndVal = 25'h0000002;
+parameter [24:0] cntEndVal = 25'h0000001;
 
+always @(posedge CLK)
+begin
+	if(RST == 1'b1)
+	begin
+		CLKOUT <= CLK;
+	end
+	else
+	begin
+		CLKOUT <= ~CLKOUT;
+	end
+end
 
+/*
 always @(posedge CLK or posedge RST)
   if (RST == 1'b1) begin
     CLKOUT <= 1'b0;
@@ -30,5 +42,5 @@ always @(posedge CLK or posedge RST)
       clkCount <= clkCount + 1'b1;
     end
   end
-
+*/
 endmodule
