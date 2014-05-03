@@ -71,7 +71,7 @@ module tb_SPI_MASTER;
 		rst = 0;
 		// Add stimulus here
 		#2
-		data_in <= 32'b01100001010101001110000000000000;
+		data_in <= 32'b01000001010101001010000000000000;
 
 		#2
 		wait(mosi);
