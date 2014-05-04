@@ -12,7 +12,10 @@ module WB_IF(
   output reg [31:0] WB_DAT_O,
   output reg WB_ACK_O,
   
+  output reg TGD_0,
+  
   //memory
+  input BUF_ERR,
   output reg BUF_WR,
   output reg [31:0] BUF_DATA_O,
   output reg [7:0] BUF_ADDR_O,
@@ -54,10 +57,11 @@ begin
 
 	if(WB_RST_I)
 	begin
+		TGD_0 <= 0;
 		BUF_DATA_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 		state <= 0;
 		BUF_WR <= 0;
-		BUF_ADDR_O <= 7'bxxxxxxx;
+		BUF_ADDR_O <= 8'bxxxxxxx;
 		WB_ACK_O <= 0;
 		WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 	end
@@ -90,6 +94,7 @@ begin
 		case (state)
 		2: begin
 				WB_ACK_O <= 1;
+				TGD_0 <= BUF_ERR;
 				state <= state + 1;
 				if(!WB_WE_I)
 				begin
@@ -97,11 +102,12 @@ begin
 				end
 		end	
 		3: begin
+			TGD_0 <= 0;
 			BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
 			state <= 0;
 			BUF_WR <= 0;
 			WB_DAT_O <= 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
-			BUF_ADDR_O <= 7'bxxxxxxx;
+			BUF_ADDR_O <= 8'bxxxxxxx;
 			WB_ACK_O <= 0;
 			end
 		endcase

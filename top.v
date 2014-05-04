@@ -11,6 +11,7 @@ module top(
   output [31:0] DAT_O,
   output ACK_O,
 
+  output TGD_0,
   output SPI_MOSI,                             // serial data input
   output SPI_CLK,                            // serial data clock
   output SPI_CS_N,                           // chip select - active low
@@ -40,6 +41,7 @@ wire SPI_to_BUFF_ACK;
 wire [7:0] SPI_to_BUFF_ADR;
 wire SPI_to_BUFF_WE;
 
+
 wire CLKd;
 assign SPI_CLK = CLKd;
 
@@ -57,7 +59,9 @@ WB_IF wb_if(
   .BUF_ADDR_O(WB_to_BUFF_ADR),
   .BUF_DATA_O(WB_to_BUFF_DATA),
   .BUF_DATA_I(BUFF_to_WB_DATA),
-  .BUF_ACK(BUFF_to_WB_ACK)
+  .BUF_ACK(BUFF_to_WB_ACK),
+  .BUF_ERR(BUFF_to_WB_ERR),
+  .TGD_0(TGD_0)
   );
 
 

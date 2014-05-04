@@ -21,6 +21,7 @@ module FINAL_TEST;
 	wire SPI_WP_N;
 	wire SPI_HOLD_N;
 	wire SPI_RESET;
+	wire TGD_0;
 
 	// Instantiate the Unit Under Test (UUT)
 	top uut (
@@ -39,7 +40,8 @@ module FINAL_TEST;
 		.SPI_WP_N(SPI_WP_N), 
 		.SPI_HOLD_N(SPI_HOLD_N), 
 		.SPI_RESET(SPI_RESET), 
-		.SPI_MISO(SPI_MISO)
+		.SPI_MISO(SPI_MISO),
+		.TGD_0(TGD_0)
 	);
 
 
