@@ -42,7 +42,7 @@ integer i;
 // WB Message: address[6:0], data[7:0], dcares, R/nW, foglalt, ready
 reg acka_cntr;
 
-initial begin
+initial begin 			// buffer memoria inicializalasa 0 kezdeti ertekekkel
 	for( i = 0; i < 256; i = i + 1 )
 	begin
 		ram[i] <= 32'd0;
@@ -63,7 +63,7 @@ begin
 			acka_cntr <= 0;
 			errora <= 1'b0;
 		end
-	
+
 		// WB irna a bufferbe
 		if (wea)
 		begin
@@ -77,7 +77,6 @@ begin
 				ram[addra][30] <= 1'b1;	//foglalt
 			end
 			// ha foglalt a hely
-			// waiteljunk addig vagy adjunk bus errort? (busz error sztem nem erre van bar ki tudja)
 			else
 			begin
 				errora <= 1'b1;
@@ -97,9 +96,9 @@ begin
 			end
 		end //end WB read
 		doa <= ram[addra];		// majd kiolvasonak nezni kell h ready-e
-		
+
 	end
-	
+
 	else
 	begin
 		acka_cntr <= 0;
@@ -109,7 +108,7 @@ begin
 
 end
 
-always @(negedge clkb)
+always @(negedge clkb) // A Buffer SPI feloli oldala, szokvanyos memoriakent mukodik
 begin
 	if (enb)
 	begin

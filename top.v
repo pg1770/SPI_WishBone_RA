@@ -23,8 +23,8 @@ module top(
 
 
 
-assign SPI_HOLD_N = 1;
-assign SPI_WP_N = 1;
+assign SPI_HOLD_N = 1;  // HOLD signal for the Microchip SPI memory simulation model
+assign SPI_WP_N = 1;    // WRITE PROTECT signal for the Microchip SPI memory simulation model
 
 assign SPI_RESET = RST_I;
 
@@ -45,7 +45,7 @@ wire SPI_to_BUFF_WE;
 wire CLKd;
 assign SPI_CLK = CLKd;
 
-WB_IF wb_if(
+WB_IF wb_if(        // WISHBONE Interface between the WishBone bus signals and the Buffer
   .WB_ADR_I(ADR_I),
   .WB_CYC_I(CYC_I),
   .WB_WE_I(WE_I),
@@ -66,14 +66,14 @@ WB_IF wb_if(
 
 
 
-clk_div DIVi(
+clk_div DIVi(  // Clock Division unit for the SPI SCK signal
   .CLK(CLK_I),
   .RST(RST_I),
   .CLKOUT(CLKd)
 );
 
 
-v_rams_16 ram_42_x_16(
+v_rams_16 ram_42_x_16(  // Dual-port memory buffer with additional specific logic for the application
   .clka(CLK_I),
   .clkb(CLKd),
   .ena(!RST_I),
@@ -88,12 +88,12 @@ v_rams_16 ram_42_x_16(
   .dib(SPI_to_BUFF_DATA),
   .doa(BUFF_to_WB_DATA),
   .dob(BUFF_to_SPI_DATA),
-  .errora(BUFF_to_WB_ERR)  //ezzel meg kellene vmit kezdeni a Wb nal
+  .errora(BUFF_to_WB_ERR)
   );
 
 
 
-SPI_MASTER spi_if(
+SPI_MASTER spi_if(    // SPI Master module between the Buffer and the SPI Memory simulation model
 	.clk(CLKd),
 	.rst(RST_I),
 	.data_out(SPI_to_BUFF_DATA),

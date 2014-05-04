@@ -9,7 +9,6 @@ module SPI_MASTER(
   output reg [7:0] buf_addrb=0,
   output reg web=0,
   output reg mosi,
-  // output sck,   // ez lehet nemkene kulon
   output reg csn=1,
   input miso
     );
@@ -33,24 +32,27 @@ module SPI_MASTER(
 
 // mosi, csn negedge-re menjen ki, miso posedge-re jojjon be
 
-reg [23:0] shr_mosi;
-reg [4:0] shr_mosi_cntr=0;
+reg [23:0] shr_mosi;  // shift regiszter az SPI mosi muveletek reszere
+reg [4:0] shr_mosi_cntr=0;  // a kiadando mosi bitek szamat tarolja
 
-reg [23:0] shr_miso;
-reg [4:0] shr_miso_cntr=0;
+reg [23:0] shr_miso;  // shift regiszter az SPI miso muveletek reszere
+reg [4:0] shr_miso_cntr=0;  // a kiadando miso bitek szamat tarolja
 
-reg [1:0] state=0;
+reg [1:0] state=0;  // a kozponti allapotget deklaracioja
 
-reg spimem_wip;
 
-reg wipreadflag=1;
-reg statusreadflag=1;
-reg [2:0] webflag=2;
-reg [3:0] wren_cntr=8;
-reg [7:0] shr_wren=8'b01100000;
-reg wrenflag=1;
+reg wipreadflag=1;  // az SPI memoria status regiszterenek write in progress bitjenek kilvasasat jelzi, innen tudjuk mikor fejezodik be az SPI memoria irasa
+reg statusreadflag=1; // az SPI memoria status regiszterenek kiolvasasat jelzi
+reg [2:0] webflag=2;  // a Buffer memoria B portjanak write enable jele allapotaval kapcsolatos jelek jelzesere
+reg [3:0] wren_cntr=8;  // az SPI memoria Write Enable Latch-enek beallitasahoz hasznalt bitszamlalo
+reg [7:0] shr_wren=8'b01100000; // az SPI memoria Write Enable Latch-enek beallitasara szolgalo kishiftelendo parancs
+reg wrenflag=1; // az SPI memoria Write Enable Latch-enek beallitasat jelzi
 
-reg [31:0] data_in_temp;
+reg [31:0] data_in_temp;  // a Buffer B portjara kiadando adat reszben tartalmazhatja a bemeneti adatokat, ennek tarolasara szolgal a regisztertomb
+
+
+// Felfuto es lefuto eleket is kezelunk, mert a memoria az adatokat amikor kiadja es mintavetelezi, az termeszetesen nem egyszerre tortenik
+// A buffer irasakor is hasznositjuk az alabbi logikat:
 
 reg clk_rise_r=0;
 reg clk_fall_r=0;
@@ -74,6 +76,8 @@ begin
     clk_fall_r <= ~clk_fall_r;
 end
 
+// A mukodes leirasa:
+
 always @(posedge clk or posedge rst or negedge clk) begin
   if (rst) begin
     state <= 0;
@@ -92,16 +96,16 @@ always @(posedge clk or posedge rst or negedge clk) begin
 
   else if (clk_rise)
   begin
-    if (data_in[30] == 1'b1 && data_in[31] != 1'b1) begin   // ha foglalt, kelljen h es nem ready?
+    if (data_in[30] == 1'b1 && data_in[31] != 1'b1) begin
       case(state)
-        2'b00:    // adatok bufferbol
+        2'b00:    // adatok kiolvasasa a bufferbol
         begin
-          if( wren_cntr == 0 && wrenflag == 0)    // barmi elott beallitjuk a write enable regisztert a memoriaban
+          if( wren_cntr == 0 && wrenflag == 0)
           begin
             // csn <= 1'b1;        // wren beiras utani csn beallitas
             if(data_in[29] == 1'b1)         // read kell
             begin
-              // shr_mosi <= {8'b00000011,1'b0,data_in[6:0],8'b00000000}; // regiszter veget feltoltjuk 0-kal, mert miertne
+              // shr_mosi <= {8'b00000011,1'b0,data_in[6:0],8'b00000000}; // regiszter veget feltoltjuk 0-kal
               shr_mosi <= {8'b00000000,data_in[6:0],1'b0,8'b11000000};
               shr_mosi_cntr <= 16;
               state <= 2'b01;
@@ -110,64 +114,27 @@ always @(posedge clk or posedge rst or negedge clk) begin
             begin
               // shr_mosi <= {8'b00000010,1'b0,data_in[6:0],data_in[14:7]};
               shr_mosi <= {data_in[14:7],data_in[6:0],1'b0,8'b01000000};
-              shr_mosi_cntr <= 24;    // itt majd figyelni kell...
+              shr_mosi_cntr <= 24;
               state <= 2'b01;
             end
           end
         end
-        2'b01:  // buffer adatok kishiftelese az spi memoriara
-        begin   // ez teljesen a negedgenel van
-          // if(shr_mosi_cntr != 5'b0)
-          // begin
-          //   if(csn == 1'b1)
-          //   begin
-          //     csn <= 1'b0;
-          //   end
-          //   mosi <= shr_mosi[0];
-          //   shr_mosi <= {1'b0,shr_mosi[22:1]};
-          //   shr_mosi_cntr <= shr_mosi_cntr - 1;
-          // end
-          // else
-          // begin
-          //   if(data_in[29] == 1'b1)
-          //   begin
-          //   state <= 2'b11; // ha olvasas van, arra rogton jon a valasz nem kell nezni, h kesze, mint az irasnal
-          //   shr_miso_cntr <= 8;
-          //   end
-          //   else
-          //   begin
-          //     csn <= 1'b1;
-          //     state <= 2'b10; // ha iras van
-          //   end
-          // end
+        2'b01:  // buffer adatok kishiftelese az spi memoriara, lefuto elre tortenik
+        begin
         end
 
-        2'b10:  // ha iras van, az spi status regiszter alapjan nezzuk, hogy kesz van e mar az iras
+        2'b10:  // ha memoria iras van akkor jutunk ide, az spi status regiszter alapjan nezzuk, hogy kesz van e mar az iras
         begin
-          // * 1 *
+          // * 1 * // az spi memoria statusz regiszterenek lekerdezesenek az elokeszitese
           if(shr_mosi_cntr == 5'b0 && wipreadflag == 1)
           begin
-            // shr_mosi <= {8'b00000101,16'b0}; // regiszter veget feltoltjuk 0-kal, mert miertne
+            // shr_mosi <= {8'b00000101,16'b0}; // regiszter veget feltoltjuk 0-kal
             shr_mosi <= {16'b0,8'b10100000};
             shr_mosi_cntr <= 8;
             wipreadflag <= 0;
           end
 
-          // else if(shr_mosi_cntr != 5'b0)
-          // begin
-          //   mosi <= shr_mosi[0];
-          //   shr_mosi <= {1'b0,shr_mosi[22:1]};
-          //   shr_mosi_cntr <= shr_mosi_cntr - 1;
-          //   if(csn == 1'b1)
-          //   begin
-          //     csn <= 1'b0;
-          //   end
-          // end
-
-          // else  // jon a valasz a status regisztertol
-          // else if( shr_mosi_cntr == 5'b0)
-
-          // * 3 *
+          // * 3 * // a status regiszter tartalmanak fogadasa az SPI memoriatol
           else if ( !(shr_mosi_cntr != 5'b0 && !(shr_mosi_cntr == 0  && wipreadflag == 1) ) )
           begin
             if(statusreadflag == 1 && shr_miso_cntr == 0)
@@ -184,27 +151,26 @@ always @(posedge clk or posedge rst or negedge clk) begin
             else    // ha mar beirtuk a status regiszter tartalmat az shr_miso regiszterbe
             begin
               // csn <= 1'b1;
-              if(shr_miso[0] == 1'b0) // tehat ha az iras befejezodott
+              if(shr_miso[0] == 1'b0) // tehat ha az iras befejezodott, ez a write in progress bit
               begin
                 if(webflag == 2)
                 begin
-						data_out[30:0] <= data_in[30:0];
-						data_out[31] <= 1'b1; // az egesz iras ciklus ready
+      						data_out[30:0] <= data_in[30:0];
+      						data_out[31] <= 1'b1; // az egesz iras ciklus ready
 
-						webflag <= 1;
+      						webflag <= 1;
                 end
-					 else if (webflag == 1)
-					 begin
-						web <= 1;
-                  webflag <= 0;
-					 end
+    					  else if (webflag == 1)
+    					  begin
+    						web <= 1;
+                webflag <= 0;
+    					 end
                 else
                 begin
-
                 wipreadflag <= 1;
                 statusreadflag <= 1;
                 web <= 0;
-                webflag <= 2; // remelem ez igy ok
+                webflag <= 2;
                 state <= 2'b00;
                 end
               end
@@ -217,9 +183,9 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
         end
 
-        2'b11:
+        2'b11:  // memoria olvasas eseten jutunk ebbe az allapotba, kiadjuk a Buffernek a kiolvasott ertekekkel frissitett adatot
         begin
-          if(shr_miso_cntr != 0) // if(shr_mosi_cntr != 0)
+          if(shr_miso_cntr != 0)  // miso-t felfuto elre mintavetelezzuk
           begin
             shr_miso[ 7 - (shr_miso_cntr-1) ] <= miso;
             shr_miso_cntr <= shr_miso_cntr -1;
@@ -227,21 +193,21 @@ always @(posedge clk or posedge rst or negedge clk) begin
           else // shr_misoba mar ki van olvasva az spi read valasz
           begin
 
-				if (webflag == 2)
-				begin
+  				if (webflag == 2)
+  				begin
 
-				  data_in_temp <= data_in;
-				  webflag <= 1;
-				end
-            else if(webflag == 1)
+  				  data_in_temp <= data_in;
+  				  webflag <= 1;
+  				end
+          else if(webflag == 1)
             begin
               web <= 1;
               webflag <= 0;
-				  data_out[14:7] <= shr_miso[7:0];
+				      data_out[14:7] <= shr_miso[7:0];
               data_out[6:0] <= data_in_temp[6:0];
               data_out[30:15] <= data_in_temp[30:15];
               data_out[31] <= 1'b1;
-              
+
             end
             else
             begin
@@ -270,7 +236,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
   begin
     if (data_in[30] == 1'b1 && data_in[31] != 1'b1) begin
       case(state)
-        2'b00:
+        2'b00:  // az SPI memoria Write Enable Latch-enek beallitasa, hogy kesobb tudjunk majd irni a memoriaba
         begin
           if( wren_cntr != 0)
           begin
@@ -288,6 +254,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
             wrenflag <= 0;
           end
         end
+
         2'b01:  // buffer adatok kishiftelese az spi memoriara
         begin
           wrenflag <= 2;
@@ -305,7 +272,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
           begin
             if(data_in[29] == 1'b1)
             begin
-            state <= 2'b11; // ha olvasas van, arra rogton jon a valasz nem kell nezni, h kesze, mint az irasnal
+            state <= 2'b11; // ha olvasas van, arra rogton jon a valasz, nem kell nezni, h kesz van-e, mint az irasnal
             shr_miso_cntr <= 8;
             end
             else
@@ -317,8 +284,8 @@ always @(posedge clk or posedge rst or negedge clk) begin
         end
 
         2'b10:
-        // * 2 *
-        if(shr_mosi_cntr != 5'b0 && !(shr_mosi_cntr == 0  && wipreadflag == 1) )  // check
+        // * 2 * // az SPI memoria status regiszterenek lekerdezesehez a parancs kishiftelese
+        if(shr_mosi_cntr != 5'b0 && !(shr_mosi_cntr == 0  && wipreadflag == 1) )
         begin
           mosi <= shr_mosi[0];
           shr_mosi <= {1'b0,shr_mosi[22:1]};
@@ -329,8 +296,8 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
         end
 
-        // * 4 *
-        else if ( !(shr_mosi_cntr != 5'b0 && !(shr_mosi_cntr == 0  && wipreadflag == 1) ) ) // ezt lehet ki lehet szedni
+        // * 4 *  // a chip select visszaigazitasa (ez csak lefuto elre tortenhet, a mosi allitassal egyetemben)
+        else if ( !(shr_mosi_cntr != 5'b0 && !(shr_mosi_cntr == 0  && wipreadflag == 1) ) )
         begin
           if( !( shr_miso_cntr != 0 && !(statusreadflag == 1 && shr_miso_cntr ==0) ) )
           begin
@@ -338,18 +305,11 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
         end
 
-        2'b11: begin if(shr_miso_cntr == 0 && webflag == 0) csn <= 1; end // webflag lehuzasat mar latja a negedge elvileg
+        2'b11: begin if(shr_miso_cntr == 0 && webflag == 0) csn <= 1; end   // chip select allitasa lefuto elre
       endcase
     end
   end
 
 end
-
-// bufferbol parancs kiolvasasa, leforditasa, cim, adat a memoriaparancsba
-// memoriaparancs hosszu shiftregiszterek
-// spi jelek: sck, mosi, miso, ss
-// tehat sck-t generalni kell, mosi, miso-t attol fuggoen milyen parancs van,
-// cs minden ciklus elejen, kapuzassal!
-// cs utan varas ???
 
 endmodule
