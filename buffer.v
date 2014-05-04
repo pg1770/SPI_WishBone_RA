@@ -109,7 +109,7 @@ begin
 
 end
 
-always @(posedge clkb)
+always @(negedge clkb)
 begin
 	if (enb)
 	begin
@@ -123,6 +123,7 @@ begin
 		ackb <= 1'b0;
 	end
 end
+
 
 endmodule
 
