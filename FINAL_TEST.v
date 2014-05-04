@@ -44,7 +44,7 @@ module FINAL_TEST;
 		.TGD_0(TGD_0)
 	);
 
-
+	// Az SPI memoria szimulacios modellje
 	M25AA010A mem(
 	.SI(SPI_MOSI),
 	.SCK(SPI_CLK),
@@ -55,9 +55,8 @@ module FINAL_TEST;
 	.SO(SPI_MISO)
 	);
 	
-	
-	
-	
+	// Wishbone olvasas ciklus
+	// ezt a taskot felfutol alatt hivjuk meg
 	task bus_read(input [7:0] addr_r); 
 	begin
 		#2 
@@ -75,8 +74,9 @@ module FINAL_TEST;
 	end
 	endtask
 	
-	//felfutoelre hivjuk
-	task bus_write(input [7:0] addr_w, input [31:0] data_w); //Busz írás taskja
+	// Wishbone iras ciklus
+	// ezt a taskot felfutol alatt hivjuk meg
+	task bus_write(input [7:0] addr_w, input [31:0] data_w);
 	begin
 
 		#2 
@@ -95,8 +95,9 @@ module FINAL_TEST;
 		
 	end
 	endtask
+	
 	initial begin
-		// Initialize Inputs
+	
 		ADR_I = 0;
 		CYC_I = 0;
 		WE_I = 0;
@@ -105,15 +106,22 @@ module FINAL_TEST;
 		RST_I = 0;
 		STB_I = 0;
 
-		// Wait 100 ns for global reset to finish
 		#50
 		RST_I = 1;
 		#20
 		RST_I = 0;
 		#11
 
+		// Buszciklusok
+		
+		// peldaul:
+		// uzenet beirasa a 8'b00000001 buffer cimre, ami a kovetkezot tartalmazza:
+		// a 7'b0000000 memoriacimre a 8'b01000000 adat irasa
 		bus_write(8'd1,32'b01000001010101001010000000000000);
+		
+		// uzenet olvasasa a 8'b00000001 buffercimrol
 		bus_read(8'd1);
+		
 		bus_write(8'd2,32'b01100001010101001110000000000000);
 		bus_read(8'd2);
 		bus_write(8'd3,32'b01000001010101001010101010000011);
@@ -123,9 +131,6 @@ module FINAL_TEST;
 		bus_read(8'd2);
 		bus_read(8'd4);
 		
-		
-		
-
 	end
       
 	always #1 CLK_I = ~CLK_I;

@@ -305,7 +305,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
         end
 
-        2'b11: begin if(shr_miso_cntr == 0 && webflag == 0) csn <= 1; end   // chip select allitasa lefuto elre
+        2'b11: begin if(shr_miso_cntr == 0 && webflag == 2) csn <= 1; end   // chip select allitasa lefuto elre
       endcase
     end
   end

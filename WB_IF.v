@@ -1,7 +1,11 @@
 `timescale 1ns / 1ps
 
+// Wishbone buszciklusok fogadasa,
+// iras/olvasas muveletek megvalositasa
+// a Wishbone busz es a buffer kozott
+
 module WB_IF(
-  //WB
+  // WB oldal
   input [7:0] WB_ADR_I,
   input WB_CYC_I, 
   input WB_WE_I,
@@ -14,7 +18,7 @@ module WB_IF(
   
   output reg TGD_0,
   
-  //memory
+  // Buffer oldal
   input BUF_ERR,
   output reg BUF_WR,
   output reg [31:0] BUF_DATA_O,
@@ -69,9 +73,12 @@ begin
 	else if(clk_fall)
 	begin
 		case (state)
+		
+		// kezdeti allapot
+		// varjuk, hogy ervenyes ciklus induljon (CYC_I)
 		0: begin
 			WB_ACK_O <= 0;
-			if(WB_CYC_I) //state 0, CYC_I most jelent meg
+			if(WB_CYC_I) 
 			begin
 				BUF_WR <= WB_WE_I;
 				BUF_DATA_O <= WB_DAT_I;
@@ -79,7 +86,9 @@ begin
 				state <= state + 1;
 			end
 			end
-		// varjuk a buffer ack jat
+		
+		// elozo ciklusban kiadtuk az adatot a buffernek
+		// most a buffer ACK-ra varunk
 		1: begin
 			if (BUF_ACK)
 					begin
@@ -92,6 +101,8 @@ begin
 	else if(clk_rise)
 	begin
 		case (state)
+		// ha a buffer befejezte az iras/olvasast, felfutoelre kell
+		// kiadnunk a Wishbone fele az ACK es mas jeleket
 		2: begin
 				WB_ACK_O <= 1;
 				TGD_0 <= BUF_ERR;
@@ -101,6 +112,8 @@ begin
 					WB_DAT_O <= BUF_DATA_I;
 				end
 		end	
+		
+		//befejeztuk a Wishbone ciklust
 		3: begin
 			TGD_0 <= 0;
 			BUF_DATA_O <= 40'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
@@ -112,11 +125,7 @@ begin
 			end
 		endcase
 	end
-	
-	
-	
+		
 end
-
- 
 
 endmodule
