@@ -204,7 +204,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
                 wipreadflag <= 1;
                 statusreadflag <= 1;
                 web <= 0;
-                webflag <= 1; // remelem ez igy ok
+                webflag <= 2; // remelem ez igy ok
                 state <= 2'b00;
                 end
               end
@@ -229,22 +229,24 @@ always @(posedge clk or posedge rst or negedge clk) begin
 
 				if (webflag == 2)
 				begin
-				  data_out[14:7] <= shr_miso[7:0];
-              data_out[6:0] <= data_in_temp[6:0];
-              data_out[30:15] <= data_in_temp[30:15];
-              data_out[31] <= 1'b1;
+
+				  data_in_temp <= data_in;
 				  webflag <= 1;
 				end
             else if(webflag == 1)
             begin
               web <= 1;
               webflag <= 0;
-              data_in_temp <= data_in;
+				  data_out[14:7] <= shr_miso[7:0];
+              data_out[6:0] <= data_in_temp[6:0];
+              data_out[30:15] <= data_in_temp[30:15];
+              data_out[31] <= 1'b1;
+              
             end
             else
             begin
               web <= 0;
-              webflag <= 1;
+              webflag <= 2;
               buf_addrb <= buf_addrb + 1'b1;
               wren_cntr <= 8;
               shr_wren <= 8'b01100000;

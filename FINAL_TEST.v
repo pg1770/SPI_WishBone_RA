@@ -116,7 +116,7 @@ module FINAL_TEST;
 		bus_read(8'd2);
 		bus_write(8'd3,32'b01000001010101001010101010000011);
 		bus_write(8'd4,32'b01100001010101001110000010000011);
-		#2000000
+		#200000
 		bus_read(8'd1);
 		bus_read(8'd2);
 		bus_read(8'd4);
