@@ -28,7 +28,7 @@ assign SPI_WP_N = 1;
 assign SPI_RESET = RST_I;
 
 wire WB_to_BUFF_WE;
-wire [40:0] WB_to_BUFF_ADR;
+wire [31:0] WB_to_BUFF_ADR;
 wire [31:0] WB_to_BUFF_DATA;
 wire [31:0] BUFF_to_WB_DATA;
 wire BUFF_to_WB_ACK;
@@ -81,7 +81,7 @@ v_rams_16 ram_42_x_16(
   .acka(BUFF_to_WB_ACK),
   .ackb(SPI_to_BUFF_ACK),
   .dia(WB_to_BUFF_DATA),
-  .dib(SPI_to_BUF_DATA),
+  .dib(SPI_to_BUFF_DATA),
   .doa(BUFF_to_WB_DATA),
   .dob(BUFF_to_SPI_DATA),
   .errora(BUFF_to_WB_ERR)  //ezzel meg kellene vmit kezdeni a Wb nal
