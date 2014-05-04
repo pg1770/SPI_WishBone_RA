@@ -45,7 +45,7 @@ reg spimem_wip;
 
 reg wipreadflag=1;
 reg statusreadflag=1;
-reg webflag=1;
+reg [2:0] webflag=2;
 reg [3:0] wren_cntr=8;
 reg [7:0] shr_wren=8'b01100000;
 reg wrenflag=1;
@@ -83,7 +83,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
     wren_cntr <= 8;
     wipreadflag <= 1;
     statusreadflag <= 1;
-    webflag <= 1;
+    webflag <= 2;
     web <= 0;
     csn <= 1;
     shr_wren <= 8'b01100000;
@@ -186,15 +186,21 @@ always @(posedge clk or posedge rst or negedge clk) begin
               // csn <= 1'b1;
               if(shr_miso[0] == 1'b0) // tehat ha az iras befejezodott
               begin
-                if(webflag == 1)
+                if(webflag == 2)
                 begin
-                  web <= 1;
-                  webflag <= 0;
+						data_out[30:0] <= data_in[30:0];
+						data_out[31] <= 1'b1; // az egesz iras ciklus ready
+						
+						webflag <= 1;
                 end
+					 else if (webflag == 1)
+					 begin
+						web <= 1;
+                  webflag <= 0;
+					 end
                 else
                 begin
-                data_out[30:0] <= data_in[30:0];
-                data_out[31] <= 1'b1; // az egesz iras ciklus ready
+
                 wipreadflag <= 1;
                 statusreadflag <= 1;
                 web <= 0;
@@ -220,7 +226,16 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
           else // shr_misoba mar ki van olvasva az spi read valasz
           begin
-            if(webflag == 1)
+			 
+				if (webflag == 2)
+				begin
+				  data_out[14:7] <= shr_miso[7:0];
+              data_out[6:0] <= data_in_temp[6:0];
+              data_out[30:15] <= data_in_temp[30:15];
+              data_out[31] <= 1'b1;
+				  webflag <= 1;
+				end
+            else if(webflag == 1)
             begin
               web <= 1;
               webflag <= 0;
@@ -228,10 +243,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
             end
             else
             begin
-              data_out[14:7] <= shr_miso[7:0];
-              data_out[6:0] <= data_in_temp[6:0];
-              data_out[30:15] <= data_in_temp[30:15];
-              data_out[31] <= 1'b1;
+
               web <= 0;
               webflag <= 1;
               buf_addrb <= buf_addrb + 1'b1;
@@ -271,7 +283,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
         end
         2'b01:  // buffer adatok kishiftelese az spi memoriara
         begin
-          wrenflag <= 1;
+          wrenflag <= 2;
           if(shr_mosi_cntr != 5'b0)
           begin
             if(csn == 1'b1)
