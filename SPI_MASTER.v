@@ -190,7 +190,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
                 begin
 						data_out[30:0] <= data_in[30:0];
 						data_out[31] <= 1'b1; // az egesz iras ciklus ready
-						
+
 						webflag <= 1;
                 end
 					 else if (webflag == 1)
@@ -226,7 +226,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
           end
           else // shr_misoba mar ki van olvasva az spi read valasz
           begin
-			 
+
 				if (webflag == 2)
 				begin
 				  data_out[14:7] <= shr_miso[7:0];
@@ -243,10 +243,12 @@ always @(posedge clk or posedge rst or negedge clk) begin
             end
             else
             begin
-
               web <= 0;
               webflag <= 1;
               buf_addrb <= buf_addrb + 1'b1;
+              wren_cntr <= 8;
+              shr_wren <= 8'b01100000;
+              wrenflag <= 1;
               state <= 2'b00;
             end
           end
@@ -256,6 +258,9 @@ always @(posedge clk or posedge rst or negedge clk) begin
     else                                  // ha nem foglalt
     begin
       buf_addrb <= buf_addrb + 1;
+      wren_cntr <= 8;
+      shr_wren <= 8'b01100000;
+      wrenflag <= 1;
     end
   end
 
