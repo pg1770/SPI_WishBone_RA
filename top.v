@@ -10,7 +10,7 @@ module top(
   input STB_I,  // de facto Slave Select
   output [31:0] DAT_O,
   output ACK_O,
-  
+
   output SPI_MOSI,                             // serial data input
   output SPI_CLK,                            // serial data clock
   output SPI_CS_N,                           // chip select - active low
@@ -28,7 +28,7 @@ assign SPI_WP_N = 1;
 assign SPI_RESET = RST_I;
 
 wire WB_to_BUFF_WE;
-wire [31:0] WB_to_BUFF_ADR;
+wire [7:0] WB_to_BUFF_ADR;
 wire [31:0] WB_to_BUFF_DATA;
 wire [31:0] BUFF_to_WB_DATA;
 wire BUFF_to_WB_ACK;
