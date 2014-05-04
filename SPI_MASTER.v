@@ -48,6 +48,7 @@ reg statusreadflag=1;
 reg webflag=1;
 reg [3:0] wren_cntr=8;
 reg [7:0] shr_wren=8'b01100000;
+reg wrenflag=1;
 
 reg [31:0] data_in_temp;
 
@@ -86,6 +87,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
     web <= 0;
     csn <= 1;
     shr_wren <= 8'b01100000;
+    wrenflag <= 1;
   end
 
   else if (clk_rise)
@@ -94,7 +96,7 @@ always @(posedge clk or posedge rst or negedge clk) begin
       case(state)
         2'b00:    // adatok bufferbol
         begin
-          if( wren_cntr == 0)    // barmi elott beallitjuk a write enable regisztert a memoriaban
+          if( wren_cntr == 0 && wrenflag == 0)    // barmi elott beallitjuk a write enable regisztert a memoriaban
           begin
             // csn <= 1'b1;        // wren beiras utani csn beallitas
             if(data_in[29] == 1'b1)         // read kell
@@ -261,10 +263,15 @@ always @(posedge clk or posedge rst or negedge clk) begin
             shr_wren <= {1'b0,shr_wren[7:1]};
             wren_cntr <= wren_cntr - 1;
           end
-          else csn <= 1'b1;
+          else
+          begin
+            csn <= 1'b1;
+            wrenflag <= 0;
+          end
         end
         2'b01:  // buffer adatok kishiftelese az spi memoriara
         begin
+          wrenflag <= 1;
           if(shr_mosi_cntr != 5'b0)
           begin
             if(csn == 1'b1)
